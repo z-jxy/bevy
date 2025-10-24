@@ -152,13 +152,13 @@ fn main() {
     assert_eq!(my_list, vec![1, 2, 3]);
 
     // And if you want it to actually proxy a type, you can configure it to do that as well:
-    assert!(!my_dynamic_list
-        .as_partial_reflect()
-        .represents::<Vec<u32>>());
+    assert!(!<dyn PartialReflect>::represents::<Vec<u32>>(
+        &my_dynamic_list
+    ));
     my_dynamic_list.set_represented_type(Some(<Vec<u32>>::type_info()));
-    assert!(my_dynamic_list
-        .as_partial_reflect()
-        .represents::<Vec<u32>>());
+    assert!(<dyn PartialReflect>::represents::<Vec<u32>>(
+        &my_dynamic_list
+    ));
 
     // ============================= REFERENCE ============================= //
     // For reference, here are all the available dynamic types:
