@@ -18,7 +18,7 @@ use bevy_log::warn_once;
 use bevy_platform::collections::HashMap;
 use bevy_reflect::{
     serde::{ReflectSerializer, TypedReflectDeserializer},
-    GetPath, PartialReflect, TypeRegistration, TypeRegistry,
+    PartialReflect, TypeRegistration, TypeRegistry,
 };
 use serde::{de::DeserializeSeed as _, Deserialize, Serialize};
 use serde_json::{Map, Value};
@@ -523,7 +523,7 @@ pub fn process_remote_get_resources_request(
 
     // Use the `ReflectSerializer` to serialize the value of the resource;
     // this produces a map with a single item.
-    let reflect_serializer = ReflectSerializer::new(reflected.as_partial_reflect(), &type_registry);
+    let reflect_serializer = ReflectSerializer::new(reflected, &type_registry);
     let Value::Object(serialized_object) =
         serde_json::to_value(&reflect_serializer).map_err(BrpError::resource_error)?
     else {
@@ -697,7 +697,7 @@ fn reflect_component(
     };
 
     // Each component value serializes to a map with a single entry.
-    let reflect_serializer = ReflectSerializer::new(reflected.as_partial_reflect(), type_registry);
+    let reflect_serializer = ReflectSerializer::new(reflected, type_registry);
     let Value::Object(serialized_object) =
         serde_json::to_value(&reflect_serializer).map_err(BrpError::component_error)?
     else {
@@ -920,8 +920,7 @@ fn serialize_components(
                 continue;
             }
             if let Some(reflected) = reflect_component.reflect(entity_ref) {
-                let reflect_serializer =
-                    ReflectSerializer::new(reflected.as_partial_reflect(), type_registry);
+                let reflect_serializer = ReflectSerializer::new(reflected, type_registry);
                 if let Ok(Value::Object(obj)) = serde_json::to_value(&reflect_serializer) {
                     components_map.extend(obj);
                 } else {
