@@ -67,11 +67,15 @@
 //! ## Converting between `PartialReflect` and `Reflect`
 //!
 //! Since `T: Reflect` implies `T: PartialReflect`, conversion from a `dyn Reflect` to a `dyn PartialReflect`
-//! trait object (upcasting) is infallible and can be performed with one of the following methods.
-//! Note that these are temporary while [the language feature for dyn upcasting coercion] is experimental:
-//! * [`PartialReflect::as_partial_reflect`] for `&dyn PartialReflect`
-//! * [`PartialReflect::as_partial_reflect_mut`] for `&mut dyn PartialReflect`
-//! * [`PartialReflect::into_partial_reflect`] for `Box<dyn PartialReflect>`
+//! trait object (upcasting) is infallible and can be performed using trait upcasting (as of 1.86).
+//! ```
+//! # use bevy_reflect::{PartialReflect, Reflect};
+//! fn upcast(x: &dyn Reflect) -> &dyn PartialReflect { x }
+//!
+//! let boxed_reflect: Box<dyn Reflect> = Box::new(123_i32);
+//! let boxed_partial: Box<dyn PartialReflect> = boxed_reflect;
+//! let partial: &dyn PartialReflect = boxed_partial.as_ref();
+//! ```
 //!
 //! For conversion in the other direction — downcasting `dyn PartialReflect` to `dyn Reflect` —
 //! there are fallible methods:
