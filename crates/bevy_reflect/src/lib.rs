@@ -429,7 +429,7 @@
 //! registry.register::<MyStruct>();
 //!
 //! // Serialize
-//! let reflect_serializer = ReflectSerializer::new(original_value.as_partial_reflect(), &registry);
+//! let reflect_serializer = ReflectSerializer::new(&original_value, &registry);
 //! let serialized_value: String = ron::to_string(&reflect_serializer).unwrap();
 //!
 //! // Deserialize

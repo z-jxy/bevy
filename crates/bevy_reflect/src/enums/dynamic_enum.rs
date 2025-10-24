@@ -57,7 +57,7 @@ impl From<()> for DynamicVariant {
 /// );
 ///
 /// // Apply the DynamicEnum as a patch to the original value
-/// value.apply(dyn_enum.as_partial_reflect());
+/// value.apply(&dyn_enum);
 ///
 /// // Tada!
 /// assert_eq!(None, value);
