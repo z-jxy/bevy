@@ -321,9 +321,9 @@ fn insert_reflect_with_registry_ref(
     };
 
     if let Some(reflect_component) = type_registration.data::<ReflectComponent>() {
-        reflect_component.insert(entity, component.as_partial_reflect(), type_registry);
+        reflect_component.insert(entity, &*component, type_registry);
     } else if let Some(reflect_bundle) = type_registration.data::<ReflectBundle>() {
-        reflect_bundle.insert(entity, component.as_partial_reflect(), type_registry);
+        reflect_bundle.insert(entity, &*component, type_registry);
     } else {
         panic!("`{type_path}` should have #[reflect(Component)] or #[reflect(Bundle)]");
     }
@@ -413,7 +413,7 @@ mod tests {
             .insert_reflect(boxed_reflect_component_a);
         commands
             .entity(entity2)
-            .insert_reflect(boxed_reflect_component_a_clone.into_partial_reflect());
+            .insert_reflect(boxed_reflect_component_a_clone);
         commands
             .entity(entity3)
             .insert_reflect(boxed_reflect_component_a_dynamic);
