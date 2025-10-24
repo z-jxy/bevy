@@ -409,7 +409,7 @@ mod tests {
             none: None,
         };
         let dynamic = value.to_dynamic_struct();
-        let reflect = dynamic.as_partial_reflect();
+        let reflect: &dyn PartialReflect = &dynamic;
 
         let registry = get_registry();
 
@@ -669,7 +669,7 @@ mod tests {
             });
 
             let registry = TypeRegistry::new();
-            let serializer = ReflectSerializer::new(value.as_partial_reflect(), &registry);
+            let serializer = ReflectSerializer::new(&*value, &registry);
 
             let error = ron::ser::to_string(&serializer).unwrap_err();
 

@@ -92,7 +92,7 @@ where
 
     for index in 0..len {
         if let Some(value) = serialization_data.and_then(|data| data.generate_default(index)) {
-            tuple.insert_boxed(value.into_partial_reflect());
+            tuple.insert_boxed(value);
             continue;
         }
 

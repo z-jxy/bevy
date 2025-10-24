@@ -118,21 +118,6 @@ where
     /// [`TypeRegistry::get_type_info`]: crate::TypeRegistry::get_type_info
     fn get_represented_type_info(&self) -> Option<&'static TypeInfo>;
 
-    /// Casts this type to a boxed, reflected value.
-    ///
-    /// This is useful for coercing trait objects.
-    fn into_partial_reflect(self: Box<Self>) -> Box<dyn PartialReflect>;
-
-    /// Casts this type to a reflected value.
-    ///
-    /// This is useful for coercing trait objects.
-    fn as_partial_reflect(&self) -> &dyn PartialReflect;
-
-    /// Casts this type to a mutable, reflected value.
-    ///
-    /// This is useful for coercing trait objects.
-    fn as_partial_reflect_mut(&mut self) -> &mut dyn PartialReflect;
-
     /// Attempts to cast this type to a boxed, [fully-reflected] value.
     ///
     /// [fully-reflected]: Reflect
@@ -286,7 +271,7 @@ where
             ReflectRef::Enum(dyn_enum) => Box::new(dyn_enum.to_dynamic_enum()),
             #[cfg(feature = "functions")]
             ReflectRef::Function(dyn_function) => Box::new(dyn_function.to_dynamic_function()),
-            ReflectRef::Opaque(value) => value.reflect_clone().unwrap().into_partial_reflect(),
+            ReflectRef::Opaque(value) => value.reflect_clone().unwrap(),
         }
     }
 
@@ -466,7 +451,7 @@ impl dyn PartialReflect {
     ) -> Result<Box<T>, Box<dyn PartialReflect>> {
         self.try_into_reflect()?
             .downcast()
-            .map_err(PartialReflect::into_partial_reflect)
+            .map_err(|value| value as Box<dyn PartialReflect>)
     }
 
     /// Downcasts the value to type `T`, unboxing and consuming the trait object.

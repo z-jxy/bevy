@@ -132,21 +132,6 @@ pub fn common_partial_reflect_methods(
             #FQOption::Some(self)
         }
 
-        #[inline]
-        fn into_partial_reflect(self: #bevy_reflect_path::__macro_exports::alloc_utils::Box<Self>) -> #bevy_reflect_path::__macro_exports::alloc_utils::Box<dyn #bevy_reflect_path::PartialReflect> {
-            self
-        }
-
-        #[inline]
-        fn as_partial_reflect(&self) -> &dyn #bevy_reflect_path::PartialReflect {
-            self
-        }
-
-        #[inline]
-        fn as_partial_reflect_mut(&mut self) -> &mut dyn #bevy_reflect_path::PartialReflect {
-            self
-        }
-
         #hash_fn
 
         #partial_eq_fn

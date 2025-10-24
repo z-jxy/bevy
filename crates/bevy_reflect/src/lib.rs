@@ -1469,12 +1469,10 @@ mod tests {
 
         // Assert
         let expected = MyStruct { foo: 123 };
-        assert!(expected
-            .reflect_partial_eq(reflected.as_partial_reflect())
-            .unwrap_or_default());
+        assert!(expected.reflect_partial_eq(&*reflected).unwrap_or_default());
         let not_expected = MyStruct { foo: 321 };
         assert!(!not_expected
-            .reflect_partial_eq(reflected.as_partial_reflect())
+            .reflect_partial_eq(&*reflected)
             .unwrap_or_default());
     }
 
@@ -1920,7 +1918,7 @@ mod tests {
         let mut deserializer = Deserializer::from_str(&serialized).unwrap();
         let reflect_deserializer = ReflectDeserializer::new(&registry);
         let value = reflect_deserializer.deserialize(&mut deserializer).unwrap();
-        let roundtrip_foo = Foo::from_reflect(value.as_partial_reflect()).unwrap();
+        let roundtrip_foo = Foo::from_reflect(&*value).unwrap();
 
         assert!(foo.reflect_partial_eq(&roundtrip_foo).unwrap());
     }
@@ -3657,7 +3655,7 @@ bevy_reflect::tests::Test {
 
             let mut result = Quat::default();
 
-            result.apply(dynamic_struct.as_partial_reflect());
+            result.apply(&*dynamic_struct);
 
             assert_eq!(result, quat(1.0, 2.0, 3.0, 4.0));
         }
@@ -3706,7 +3704,7 @@ bevy_reflect::tests::Test {
 
             let mut result = Vec3::default();
 
-            result.apply(dynamic_struct.as_partial_reflect());
+            result.apply(&*dynamic_struct);
 
             assert_eq!(result, vec3(12.0, 3.0, -6.9));
         }

@@ -568,7 +568,7 @@ mod tests {
 
         let mut result = EulerRot::default();
 
-        result.apply(dynamic_struct.as_partial_reflect());
+        result.apply(&*dynamic_struct);
 
         assert_eq!(result, EulerRot::XZY);
     }

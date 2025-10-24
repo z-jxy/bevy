@@ -380,7 +380,7 @@ impl<'de, P: ReflectDeserializerProcessor> DeserializeSeed<'de>
             // Handle both Value case and types that have a custom `ReflectDeserialize`
             if let Some(deserialize_reflect) = self.registration.data::<ReflectDeserialize>() {
                 let value = deserialize_reflect.deserialize(deserializer)?;
-                return Ok(value.into_partial_reflect());
+                return Ok(value);
             }
 
             if let Some(deserialize_reflect) =

@@ -253,8 +253,11 @@ pub trait GetPath: PartialReflect {
     ///
     /// To retrieve a statically typed reference, use
     /// [`path`][GetPath::path].
-    fn reflect_path<'p>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &dyn PartialReflect> {
-        path.reflect_element(self.as_partial_reflect())
+    fn reflect_path<'p>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &dyn PartialReflect>
+    where
+        Self: Sized,
+    {
+        path.reflect_element(self)
     }
 
     /// Returns a mutable reference to the value specified by `path`.
@@ -264,8 +267,11 @@ pub trait GetPath: PartialReflect {
     fn reflect_path_mut<'p>(
         &mut self,
         path: impl ReflectPath<'p>,
-    ) -> PathResult<'p, &mut dyn PartialReflect> {
-        path.reflect_element_mut(self.as_partial_reflect_mut())
+    ) -> PathResult<'p, &mut dyn PartialReflect>
+    where
+        Self: Sized,
+    {
+        path.reflect_element_mut(self)
     }
 
     /// Returns a statically typed reference to the value specified by `path`.
@@ -275,8 +281,11 @@ pub trait GetPath: PartialReflect {
     /// (which may be the case when using dynamic types like [`DynamicStruct`]).
     ///
     /// [`DynamicStruct`]: crate::DynamicStruct
-    fn path<'p, T: Reflect>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &T> {
-        path.element(self.as_partial_reflect())
+    fn path<'p, T: Reflect>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &T>
+    where
+        Self: Sized,
+    {
+        path.element(self)
     }
 
     /// Returns a statically typed mutable reference to the value specified by `path`.
@@ -286,8 +295,11 @@ pub trait GetPath: PartialReflect {
     /// (which may be the case when using dynamic types like [`DynamicStruct`]).
     ///
     /// [`DynamicStruct`]: crate::DynamicStruct
-    fn path_mut<'p, T: Reflect>(&mut self, path: impl ReflectPath<'p>) -> PathResult<'p, &mut T> {
-        path.element_mut(self.as_partial_reflect_mut())
+    fn path_mut<'p, T: Reflect>(&mut self, path: impl ReflectPath<'p>) -> PathResult<'p, &mut T>
+    where
+        Self: Sized,
+    {
+        path.element_mut(self)
     }
 }
 
