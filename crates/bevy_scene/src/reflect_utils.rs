@@ -14,12 +14,12 @@ pub(super) fn clone_reflect_value(
 ) -> Box<dyn PartialReflect> {
     value
         .reflect_clone()
-        .map(PartialReflect::into_partial_reflect)
+        .map(|v| v as Box<dyn PartialReflect>)
         .unwrap_or_else(|_| {
             type_registration
                 .data::<ReflectFromReflect>()
-                .and_then(|fr| fr.from_reflect(value.as_partial_reflect()))
-                .map(PartialReflect::into_partial_reflect)
+                .and_then(|fr| fr.from_reflect(value))
+                .map(|v| v as Box<dyn PartialReflect>)
                 .unwrap_or_else(|| value.to_dynamic())
         })
 }

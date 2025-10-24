@@ -304,8 +304,7 @@ impl<'w> DynamicSceneBuilder<'w> {
                         .data::<ReflectComponent>()?
                         .reflect(original_entity)?;
 
-                    let component =
-                        clone_reflect_value(component.as_partial_reflect(), type_registration);
+                    let component = clone_reflect_value(component, type_registration);
 
                     entry.components.push(component);
                     Some(())
@@ -379,8 +378,7 @@ impl<'w> DynamicSceneBuilder<'w> {
                     .reflect(self.original_world)
                     .ok()?;
 
-                let resource =
-                    clone_reflect_value(resource.as_partial_reflect(), type_registration);
+                let resource = clone_reflect_value(resource, type_registration);
 
                 self.extracted_resources.insert(component_id, resource);
                 Some(())
