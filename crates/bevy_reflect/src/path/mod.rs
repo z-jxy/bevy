@@ -248,15 +248,12 @@ impl<'a> ReflectPath<'a> for &'a str {
     message = "`{Self}` does not implement `GetPath` so cannot be accessed by reflection path",
     note = "consider annotating `{Self}` with `#[derive(Reflect)]`"
 )]
-pub trait GetPath: PartialReflect {
+pub trait GetPath: PartialReflect + Sized {
     /// Returns a reference to the value specified by `path`.
     ///
     /// To retrieve a statically typed reference, use
     /// [`path`][GetPath::path].
-    fn reflect_path<'p>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &dyn PartialReflect>
-    where
-        Self: Sized,
-    {
+    fn reflect_path<'p>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &dyn PartialReflect> {
         path.reflect_element(self)
     }
 
@@ -267,10 +264,7 @@ pub trait GetPath: PartialReflect {
     fn reflect_path_mut<'p>(
         &mut self,
         path: impl ReflectPath<'p>,
-    ) -> PathResult<'p, &mut dyn PartialReflect>
-    where
-        Self: Sized,
-    {
+    ) -> PathResult<'p, &mut dyn PartialReflect> {
         path.reflect_element_mut(self)
     }
 
@@ -281,10 +275,7 @@ pub trait GetPath: PartialReflect {
     /// (which may be the case when using dynamic types like [`DynamicStruct`]).
     ///
     /// [`DynamicStruct`]: crate::DynamicStruct
-    fn path<'p, T: Reflect>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &T>
-    where
-        Self: Sized,
-    {
+    fn path<'p, T: Reflect>(&self, path: impl ReflectPath<'p>) -> PathResult<'p, &T> {
         path.element(self)
     }
 
@@ -295,10 +286,7 @@ pub trait GetPath: PartialReflect {
     /// (which may be the case when using dynamic types like [`DynamicStruct`]).
     ///
     /// [`DynamicStruct`]: crate::DynamicStruct
-    fn path_mut<'p, T: Reflect>(&mut self, path: impl ReflectPath<'p>) -> PathResult<'p, &mut T>
-    where
-        Self: Sized,
-    {
+    fn path_mut<'p, T: Reflect>(&mut self, path: impl ReflectPath<'p>) -> PathResult<'p, &mut T> {
         path.element_mut(self)
     }
 }
@@ -402,7 +390,7 @@ impl dyn Reflect {
 }
 
 // Implement `GetPath` for `dyn Reflect`
-impl<T: Reflect + ?Sized> GetPath for T {}
+impl<T: Reflect> GetPath for T {}
 
 /// An [`Access`] combined with an `offset` for more helpful error reporting.
 #[derive(Clone, Debug, PartialEq, PartialOrd, Ord, Eq, Hash)]
