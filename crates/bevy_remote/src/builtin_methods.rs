@@ -1076,7 +1076,7 @@ pub fn process_remote_mutate_components_request(
     // mutated.
     let value_type: &TypeRegistration = type_registry
         .get_with_type_path(
-            reflected
+            (&*reflected as &dyn PartialReflect)
                 .reflect_path(path.as_str())
                 .map_err(BrpError::component_error)?
                 .reflect_type_path(),
@@ -1092,7 +1092,7 @@ pub fn process_remote_mutate_components_request(
         .map_err(BrpError::component_error)?;
 
     // Apply the mutation.
-    reflected
+    (&mut *reflected as &mut dyn PartialReflect)
         .reflect_path_mut(path.as_str())
         .map_err(BrpError::component_error)?
         .try_apply(value.as_ref())
@@ -1127,7 +1127,7 @@ pub fn process_remote_mutate_resources_request(
     // Get the type registration for the field with the given path.
     let value_registration = type_registry
         .get_with_type_path(
-            reflected_resource
+            (&*reflected_resource as &dyn PartialReflect)
                 .reflect_path(field_path.as_str())
                 .map_err(BrpError::resource_error)?
                 .reflect_type_path(),
@@ -1143,7 +1143,7 @@ pub fn process_remote_mutate_resources_request(
             .map_err(BrpError::resource_error)?;
 
     // Apply the value to the resource.
-    reflected_resource
+    (&mut *reflected_resource as &mut dyn PartialReflect)
         .reflect_path_mut(field_path.as_str())
         .map_err(BrpError::resource_error)?
         .try_apply(&*deserialized_value)
